@@ -1,4 +1,3 @@
-
 n = int(input())
 m = int(input())
 btn = [True for i in range(10)]
