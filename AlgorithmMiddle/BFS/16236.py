@@ -1,56 +1,66 @@
 from collections import deque
+import sys
 N = int(input())
 board = []
 dir_x = [0, -1, 0, 1]
 dir_y = [-1, 0, 1, 0]
 shark_size = 2
+dis = [[-1 for i in range(N)] for j in range(N)]
+min_dis, min_x, min_y = sys.maxsize, sys.maxsize, sys.maxsize
 eat_cnt = 0
-visited = [[False for i in range(N)] for j in range(N)]
+res = 0
 
 for i in range(N):
     board.append(list(map(int, input().split())))
 
-def BFS():
-    global shark_size, eat_cnt
+shark = [(j, i) for i in range(N) for j in range(N) if board[i][j] == 9]
+shark_x, shark_y = shark[0][0], shark[0][1]
+board[shark_y][shark_x] = 0
+
+def BFS(x, y):
+    global min_dis, min_x, min_y
     Q = deque()
-    for i in range(N):
-        for j in range(N):
-            if board[i][j] == 9:
-                Q.append([j, i])
-                visited[i][j] = True
+    Q.append([x, y])
+    dis[y][x] = 0
     cnt = 0
     while Q:
-        for j in range(len(Q)):
-            x, y = Q.popleft()
-            for i in range(4):
-                n_x = x + dir_x[i]
-                n_y = y + dir_y[i]
-                print("n_x = ", n_x, "n_y = ", n_y)
-                if 0 <= n_x < N and 0 <= n_y < N:
-                    if board[n_y][n_x] != 0 and board[n_y][n_x] != 9:
-                        print("board = ", board[n_y][n_x])
-                        if not visited[n_y][n_x]:
-                            if shark_size > board[n_y][n_x]:
-                                visited[n_y][n_x] = True
-                                Q.append([n_x, n_y])
-                                board[n_y][n_x] = 0
-                                eat_cnt += 1
-                                if eat_cnt == shark_size:
-                                    shark_size += 1
-                                break
-                            elif shark_size == board[n_y][n_x]:
-                                Q.append([n_x, n_y])
-                                break
-                    elif board[n_y][n_x] == 0 or board[n_y][n_x] == 9:
-                        if not visited[n_y][n_x]:
-                            visited[n_y][n_x] = True
-                            Q.append([n_x, n_y])
-        cnt += 1
-    return cnt
+        x, y = Q.popleft()
+        for i in range(4):
+            n_x = x + dir_x[i]
+            n_y = y + dir_y[i]
+            if 0 <= n_x < N and 0 <= n_y < N:
+                if dis[n_y][n_x] != -1 or board[n_y][n_x] > shark_size:
+                    continue
+                dis[n_y][n_x] = dis[y][x] + 1
+                if board[n_y][n_x] != 0 and board[n_y][n_x] < shark_size:
+                    if min_dis > dis[n_y][n_x]:
+                        min_x = n_x
+                        min_y = n_y
+                        min_dis = dis[n_y][n_x]
+                    elif min_dis == dis[n_y][n_x]:
+                        if min_y == n_y:
+                            if min_x > n_x:
+                                min_x = n_x
+                                min_y = n_y
+                        elif min_y > n_y:
+                            min_x = n_x
+                            min_y = n_y
+                Q.append([n_x, n_y])
 
-res = BFS()
-if eat_cnt == 0:
-    print(0)
-else:
-    print(res)
+while True:
+    dis = [[-1 for i in range(N)] for j in range(N)]
+    min_dis, min_x, min_y = sys.maxsize, sys.maxsize, sys.maxsize
+    BFS(shark_x, shark_y)
+    if min_x != sys.maxsize and min_y != sys.maxsize:
+        res += dis[min_y][min_x]
+        eat_cnt += 1
+        if eat_cnt == shark_size:
+            shark_size += 1
+            eat_cnt = 0
+        board[min_y][min_x] = 0
+        shark_x = min_x
+        shark_y = min_y
+    else:
+        break
 
+print(res)
