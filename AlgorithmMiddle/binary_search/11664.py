@@ -16,7 +16,7 @@ while True:
     dis_rC = dis(r_x, r_y, r_z, Cx, Cy, Cz)
     dis_mc = dis(mid_x, mid_y, mid_z, Cx, Cy, Cz)
     
-    if abs(dis_mc - res) <= 10e-6:
+    if abs(dis_mc - res) <= 10e-7:
         break
 
     if dis_mc < res:
