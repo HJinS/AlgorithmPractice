@@ -1,4 +1,5 @@
 import sys
+#틀림
 sys.setrecursionlimit(10**6)
 res = 0
 def solve(idx, total):
