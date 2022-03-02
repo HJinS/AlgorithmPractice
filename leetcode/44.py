@@ -1,13 +1,13 @@
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:  
-        #notes[i][j] = p에서 i-1까지랑 s에서 j-1까지가 일치하는가
-        #각각의 P가 S의 요소와 일치하는지를 boolean값으로 저장
+        # notes[i][j] = p에서 i-1까지랑 s에서 j-1까지가 일치하는가
+        # 각각의 P가 S의 요소와 일치하는지를 boolean값으로 저장
         notes = []
-        #처음 값을 False로 초기화
+        # 처음 값을 False로 초기화
         for i in range(len(p) + 1):
             notes.append([False] * (len(s) + 1))
         
-        #빈 string은 항상 true
+        # 빈 string은 항상 true
         notes[0][0] = True
         
         # *는 빈 공간을 차지할 수 있다.
