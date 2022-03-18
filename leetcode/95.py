@@ -29,5 +29,5 @@ class Solution:
                     res.append(node)
         return res
     
-    def generateTrees(self, n: int) -> List[Optional[TreeNode]]:
+    def generateTrees(self, n: int):
         return self.construct(1, n)
