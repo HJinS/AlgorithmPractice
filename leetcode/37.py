@@ -1,4 +1,5 @@
 from collections import deque
+from typing import List
 class Solution:
     def solveSudoku(self, board: List[List[str]]) -> None:
         # 키워드는 데이터의 구조를 어떻게 정할지
